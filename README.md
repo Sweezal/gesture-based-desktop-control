@@ -1,47 +1,54 @@
-Gesture Based Desktop Control (Windows)
+# Gesture Based Desktop Control (Windows)
 
-This project is a real-time hand gesture based desktop control system built using Python and computer vision.
+This project is a real-time hand gesture based desktop control system built using Python and computer vision.  
 It allows basic desktop operations like mouse movement, clicking, scrolling, and taking screenshots using only hand gestures captured through a webcam.
 
 The main goal of this project was to understand hand tracking, gesture logic, and human–computer interaction, while building something that actually works in real time.
 
-What this project does
+---
+
+## What this project does
 
 Using a webcam, the system detects hand landmarks and maps specific gestures to desktop actions such as:
 
-Moving the mouse cursor
-
-Clicking and dragging
-
-Scrolling up and down
-
-Taking screenshots
+- Moving the mouse cursor  
+- Clicking and dragging  
+- Scrolling up and down  
+- Taking screenshots  
 
 All gestures were designed carefully to avoid conflicts and accidental triggers.
 
-Gesture Controls
-Gesture	Action
-Index finger	Move cursor
-Pinch (thumb + index)	Single click
-Quick double pinch	Double click
-Hold pinch	Drag
-Index + Middle finger	Right click
-Thumbs up	Scroll up
-Thumbs down	Scroll down
-Open palm → Fist	Take screenshot
-Fist	Pause all actions
-Open palm	Neutral (no action)
-Tech Used
+---
 
-Python
+## Gesture Controls
 
-OpenCV
+| Gesture | Action |
+|------|------|
+| Index finger | Move cursor |
+| Pinch (thumb + index) | Single click |
+| Quick double pinch | Double click |
+| Hold pinch | Drag |
+| Index + Middle finger | Right click |
+| Thumbs up | Scroll up |
+| Thumbs down | Scroll down |
+| Open palm → Fist | Take screenshot |
+| Fist | Pause all actions |
+| Open palm | Neutral (no action) |
 
-MediaPipe
+---
 
-PyAutoGUI
+## Tech Used
 
-Project Structure
+- Python  
+- OpenCV  
+- MediaPipe  
+- PyAutoGUI  
+
+---
+
+## Project Structure
+
+```text
 gesture-based-desktop-control/
 │
 ├── src/
@@ -58,29 +65,34 @@ gesture-based-desktop-control/
 ├── .gitignore
 └── LICENSE
 
-How to Run
-1. Clone the repository
+How to Run:
+
+Clone the repository:
+
 git clone https://github.com/<your-username>/gesture-based-desktop-control.git
 cd gesture-based-desktop-control
 
-2. (Optional but recommended) Create virtual environment
+
+(Optional but recommended) Create virtual environment:
+
 python -m venv venv
 venv\Scripts\activate
 
-3. Install dependencies
+
+Install dependencies:
+
 pip install -r requirements.txt
 
-4. Run the program
+
+Run the program:
+
 python src/mouse_control.py
 
 
 Make sure your webcam is working and there is good lighting for better gesture detection.
 
-Demo
 
-A short demo video showing cursor movement, clicking, scrolling, and screenshot capture is available in the demo/ folder (or linked externally).
-
-Challenges Faced
+Challenges Faced:
 
 Designing gestures that do not conflict with each other
 
@@ -92,7 +104,7 @@ Debugging gesture priority and edge cases
 
 Most of the time went into debugging and stabilizing the system rather than just adding features.
 
-What I Learned
+What I Learned:
 
 Real-time hand landmark detection using MediaPipe
 
@@ -112,11 +124,11 @@ Volume and brightness control
 
 Cross-platform support
 
-License
+License:
 
 This project is licensed under the MIT License.
 
-Note
+Note:
 
 This project was built as a learning-focused and practical implementation, not as a commercial product.
 The emphasis was on making it stable, usable, and understandable.
