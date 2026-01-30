@@ -65,72 +65,59 @@ gesture-based-desktop-control/
 ├── .gitignore
 └── LICENSE
 
-How to Run:
+```
 
-Clone the repository:
+## How to Run
 
-git clone https://github.com/<your-username>/gesture-based-desktop-control.git
+### Clone the repository
+```bash
+git clone https://github.com/Sweezal/gesture-based-desktop-control.git
 cd gesture-based-desktop-control
+```
 
-
-(Optional but recommended) Create virtual environment:
-
+### (Optional but recommended) Create virtual environment
+```bash
 python -m venv venv
 venv\Scripts\activate
+```
 
-
-Install dependencies:
-
+### Install dependencies
+```bash
 pip install -r requirements.txt
+```
 
-
-Run the program:
-
+### Run the program
+```bash
 python src/mouse_control.py
-
+```
 
 Make sure your webcam is working and there is good lighting for better gesture detection.
 
+---
 
-Challenges Faced:
+## Demo
 
-Designing gestures that do not conflict with each other
+A short demo video showing cursor movement, clicking, scrolling, and screenshot capture is available in the `demo/` folder (or linked externally).
 
-Handling false detections and jitter
+---
 
-Managing performance and system lag on Windows
+## Challenges Faced
 
-Debugging gesture priority and edge cases
+- Gesture stability and jitter  
+- Cursor movement near screen edges  
+- Handling hand rotation and orientation  
+- Avoiding gesture conflicts  
+- Real-time performance tuning  
 
-Most of the time went into debugging and stabilizing the system rather than just adding features.
+---
 
-What I Learned:
-
-Real-time hand landmark detection using MediaPipe
-
-Gesture logic and priority handling
-
-Practical use of computer vision in system-level applications
-
-Debugging performance issues in CV-based projects
-
-Possible Improvements
-
-Support for multiple hands
-
-Customizable gestures
-
-Volume and brightness control
-
-Cross-platform support
-
-License:
+## License
 
 This project is licensed under the MIT License.
 
-Note:
+## Note:
 
 This project was built as a learning-focused and practical implementation, not as a commercial product.
 The emphasis was on making it stable, usable, and understandable.
 
-⭐ If you found this interesting, feel free to star the repository.
+## ⭐ If you found this interesting, feel free to star the repository.
