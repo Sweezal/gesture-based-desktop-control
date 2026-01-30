@@ -95,11 +95,6 @@ Make sure your webcam is working and there is good lighting for better gesture d
 
 ---
 
-## Demo
-
-A short demo video showing cursor movement, clicking, scrolling, and screenshot capture is available in the `demo/` folder (or linked externally).
-
----
 
 ## Challenges Faced
 
