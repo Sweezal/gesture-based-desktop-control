@@ -12,13 +12,7 @@ mp_hands = mp.solutions.hands
 hands = mp_hands.Hands(max_num_hands=1)
 mp_draw = mp.solutions.drawing_utils
 
-screen_w, screen_h = pyautogui.size()
-
-# Mouse smoothing
-prev_x, prev_y = 0, 0
-smoothening = 5
-
-# Pinch / click
+# Click / pinch
 pinch_start = None
 dragging = False
 last_release = 0
@@ -29,7 +23,7 @@ DRAG_TIME = 0.5
 last_right_click = 0
 RIGHT_CLICK_DELAY = 0.6
 
-# Scroll (thumbs)
+# Scroll
 last_scroll = 0
 SCROLL_DELAY = 0.25
 SCROLL_AMOUNT = 350
@@ -38,6 +32,18 @@ SCROLL_AMOUNT = 350
 last_gesture = None
 last_screenshot = 0
 SCREENSHOT_COOLDOWN = 1.0
+screenshot_triggered = False
+
+# Cursor control (stable)
+prev_ix = None
+prev_iy = None
+smooth_dx = 0
+smooth_dy = 0
+
+SENSITIVITY = 1600
+SMOOTHING = 0.25
+DEAD_ZONE = 0.002
+MAX_STEP = 40
 
 # ---------------- MAIN LOOP ----------------
 
@@ -55,7 +61,7 @@ while True:
         lm = hand.landmark
         now = time.time()
 
-        # -------- SIMPLE finger detection --------
+        # -------- FINGER DETECTION --------
         thumb  = lm[4].x < lm[3].x
         index  = lm[8].y < lm[6].y
         middle = lm[12].y < lm[10].y
@@ -69,41 +75,68 @@ while True:
         fist = finger_count == 0
 
         # ====================================================
-        # 📸 SCREENSHOT (✋ → ✊)
+        # 📸 SCREENSHOT (✋ → ✊) — FIXED
         # ====================================================
         if open_palm:
             last_gesture = "palm"
+            screenshot_triggered = False
 
-        if fist and last_gesture == "palm":
+        if fist and last_gesture == "palm" and not screenshot_triggered:
             if now - last_screenshot > SCREENSHOT_COOLDOWN:
-                filename = f"screenshot_{int(time.time())}.png"
-                pyautogui.screenshot(filename)
-                print(f"Screenshot saved: {filename}")
+                pyautogui.screenshot(f"screenshot_{int(time.time())}.png")
+                print("Screenshot taken")
                 last_screenshot = now
+            screenshot_triggered = True
             last_gesture = None
 
         # ====================================================
         # 🛑 PAUSE (FIST)
         # ====================================================
         if fist:
+            prev_ix = None
+            prev_iy = None
+            smooth_dx = 0
+            smooth_dy = 0
             pinch_start = None
             continue
 
         # ====================================================
-        # 🖱️ CURSOR MOVE (INDEX ONLY)
+        # 🖱️ CURSOR MOVE (SMOOTH + RELATIVE)
         # ====================================================
         if finger_count == 1 and index:
-            x = int(lm[8].x * screen_w)
-            y = int(lm[8].y * screen_h)
+            ix, iy = lm[8].x, lm[8].y
 
-            curr_x = prev_x + (x - prev_x) / smoothening
-            curr_y = prev_y + (y - prev_y) / smoothening
+            if prev_ix is None:
+                prev_ix, prev_iy = ix, iy
+            else:
+                dx = ix - prev_ix
+                dy = iy - prev_iy
 
-            pyautogui.moveTo(curr_x, curr_y)
-            prev_x, prev_y = curr_x, curr_y
+                if abs(dx) < DEAD_ZONE:
+                    dx = 0
+                if abs(dy) < DEAD_ZONE:
+                    dy = 0
+
+                smooth_dx = smooth_dx * (1 - SMOOTHING) + dx * SMOOTHING
+                smooth_dy = smooth_dy * (1 - SMOOTHING) + dy * SMOOTHING
+
+                move_x = smooth_dx * SENSITIVITY
+                move_y = smooth_dy * SENSITIVITY
+
+                move_x = max(-MAX_STEP, min(MAX_STEP, move_x))
+                move_y = max(-MAX_STEP, min(MAX_STEP, move_y))
+
+                pyautogui.moveRel(move_x, move_y, duration=0)
+
+                prev_ix, prev_iy = ix, iy
+        else:
+            prev_ix = None
+            prev_iy = None
+            smooth_dx = 0
+            smooth_dy = 0
 
         # ====================================================
-        # 👍 👎 THUMBS SCROLL
+        # 👍 👎 SCROLL (THUMB)
         # ====================================================
         if thumb and not index and not middle and not ring and not pinky:
             if now - last_scroll > SCROLL_DELAY:
@@ -114,12 +147,9 @@ while True:
                 last_scroll = now
 
         # ====================================================
-        # 🤏 PINCH CLICK / DOUBLE CLICK / DRAG
+        # 🤏 CLICK / DOUBLE CLICK / DRAG
         # ====================================================
-        pinch_dist = math.hypot(
-            lm[4].x - lm[8].x,
-            lm[4].y - lm[8].y
-        )
+        pinch_dist = math.hypot(lm[4].x - lm[8].x, lm[4].y - lm[8].y)
 
         if pinch_dist < 0.04:
             if pinch_start is None:
@@ -157,6 +187,10 @@ while True:
 
 cap.release()
 cv2.destroyAllWindows()
+
+
+
+
 
 
 
